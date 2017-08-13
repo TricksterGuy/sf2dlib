@@ -61,10 +61,9 @@ int main()
 
 		offset3d = CONFIG_3D_SLIDERSTATE * 30.0f;
 
-		sf2d_set_vblank_wait(0);
-		sf2d_start_render();
 
-            sf2d_set_render_screen(GFX_TOP, GFX_LEFT);
+		sf2d_start_render();
+			sf2d_set_render_screen(GFX_TOP, GFX_LEFT);
 			sf2d_draw_fill_circle(offset3d + 60, 100, 35, RGBA8(0x00, 0xFF, 0x00, 0xFF));
 			sf2d_draw_fill_circle(offset3d + 180, 120, 55, RGBA8(0xFF, 0xFF, 0x00, 0xFF));
 			sf2d_draw_rectangle_rotate(offset3d + 260, 20, 40, 40, RGBA8(0xFF, 0xFF, 0x00, 0xFF), -2.0f*rad);
@@ -86,7 +85,6 @@ int main()
 			sf2d_draw_texture_rotate(tex2, touch_x, touch_y, -rad);
 			sf2d_draw_rectangle(160-15 + cosf(rad)*50.0f, 120-15 + sinf(rad)*50.0f, 30, 30, RGBA8(0x00, 0xFF, 0xFF, 0xFF));
 			sf2d_draw_fill_circle(40, 40, 35, RGBA8(0x00, 0xFF, 0x00, 0xFF));
-
 		sf2d_end_render();
 
 		rad += 0.2f;
