@@ -2,14 +2,15 @@
 #include "sf2d.h"
 #include "shader_shbin.h"
 
+#define DISPLAY_TRANSFER_FLAGS (GX_TRANSFER_FLIP_VERT(0) | GX_TRANSFER_OUT_TILED(0) | GX_TRANSFER_RAW_COPY(0) | \
+	GX_TRANSFER_IN_FORMAT(GX_TRANSFER_FMT_RGBA8) | GX_TRANSFER_OUT_FORMAT(GX_TRANSFER_FMT_RGB8) | \
+	GX_TRANSFER_SCALING(GX_TRANSFER_SCALE_NO))
 
 static int sf2d_initialized = 0;
 // Temporary memory pool
 static void *pool_addr = NULL;
 static u32 pool_index = 0;
 static u32 pool_size = 0;
-//VBlank wait
-static int vblank_wait = 1;
 //FPS calculation
 static float current_fps = 0.0f;
 static unsigned int frames = 0;
@@ -28,6 +29,7 @@ static sf2d_rendertarget * targetTopLeft;
 static sf2d_rendertarget * targetTopRight;
 static sf2d_rendertarget * targetBottom;
 static int in_render;
+static int vblank_wait = 1;
 
 int sf2d_init()
 {
@@ -49,9 +51,9 @@ int sf2d_init_advanced(int gpucmd_size, int temppool_size)
 	targetTopRight = sf2d_create_rendertarget(400, 240);
 	targetBottom   = sf2d_create_rendertarget(320, 240);
 	sf2d_set_clear_color(0);
-	C3D_RenderTargetSetOutput(targetTopLeft->target,  GFX_TOP,    GFX_LEFT,  0x1000);
-	C3D_RenderTargetSetOutput(targetTopRight->target, GFX_TOP,    GFX_RIGHT, 0x1000);
-	C3D_RenderTargetSetOutput(targetBottom->target,   GFX_BOTTOM, GFX_LEFT,  0x1000);
+	C3D_RenderTargetSetOutput(targetTopLeft->target,  GFX_TOP,    GFX_LEFT,  DISPLAY_TRANSFER_FLAGS);
+	C3D_RenderTargetSetOutput(targetTopRight->target, GFX_TOP,    GFX_RIGHT, DISPLAY_TRANSFER_FLAGS);
+	C3D_RenderTargetSetOutput(targetBottom->target,   GFX_BOTTOM, GFX_LEFT,  DISPLAY_TRANSFER_FLAGS);
 
 	//Setup temp pool
 	pool_addr = linearAlloc(temppool_size);
@@ -72,7 +74,6 @@ int sf2d_init_advanced(int gpucmd_size, int temppool_size)
 	C3D_DepthTest(true, GPU_GEQUAL, GPU_WRITE_ALL);
 	C3D_BoolUnifSet(GPU_VERTEX_SHADER, useTransform_desc, false);
 
-	vblank_wait = 1;
 	current_fps = 0.0f;
 	frames = 0;
 	last_time = osGetTime();
@@ -113,40 +114,46 @@ void sf2d_set_transform(C3D_Mtx* mtx)
 	}
 }
 
-void sf2d_start_frame(gfxScreen_t screen, gfx3dSide_t side)
+void sf2d_set_vblank_wait(int enable)
+{
+    vblank_wait = enable;
+}
+
+void sf2d_start_render()
+{
+    if (in_render) return;
+
+    sf2d_pool_reset();
+    C3D_FrameBegin(vblank_wait ? C3D_FRAME_SYNCDRAW : 0);
+    in_render = 1;
+}
+
+void sf2d_set_render_screen(gfxScreen_t screen, gfx3dSide_t side)
 {
 	cur_screen = screen;
 	cur_side = side;
 
+	sf2d_rendertarget* target = NULL;
 	if (screen == GFX_TOP) {
 		if (side == GFX_LEFT) {
-			sf2d_start_frame_target(targetTopLeft);
+			target = targetTopLeft;
 		} else {
-			sf2d_start_frame_target(targetTopRight);
+			target = targetTopRight;
 		}
 	} else {
-		sf2d_start_frame_target(targetBottom);
+	    target = targetBottom;
 	}
+
+    sf2d_set_render_target(target);
 }
 
-void sf2d_start_frame_target(sf2d_rendertarget *target)
+void sf2d_set_render_target(sf2d_rendertarget *target)
 {
-	if (!in_render) {
-		sf2d_pool_reset();
-		C3D_FrameBegin(vblank_wait ? C3D_FRAME_SYNCDRAW : 0);
-		in_render = 1;
-	}
-
 	C3D_FrameDrawOn(target->target);
 	C3D_FVUnifMtx4x4(GPU_VERTEX_SHADER, projection_desc, &target->projection);
 }
 
-void sf2d_end_frame()
-{
-	// Nothing
-}
-
-void sf2d_swapbuffers()
+void sf2d_end_render()
 {
 	if (!in_render) return;
 
@@ -161,11 +168,6 @@ void sf2d_swapbuffers()
 		frames = 0;
 		last_time = osGetTime();
 	}
-}
-
-void sf2d_set_vblank_wait(int enable)
-{
-	vblank_wait = enable;
 }
 
 float sf2d_get_fps()

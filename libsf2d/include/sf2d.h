@@ -175,33 +175,32 @@ void sf2d_set_3D(int enable);
 void sf2d_set_transform(C3D_Mtx* mtx);
 
 /**
- * @brief Starts a frame
+ * @brief Enables or disables the VBlank waiting on sf2d_start_render
+ * @param enable whether to enable or disable the VBlank waiting
+ */
+void sf2d_set_vblank_wait(int enable);
+
+/** @brief Starts Rendering
+ */
+void sf2d_start_render();
+
+/**
+ * @brief Set screen to render to.
  * @param screen target screen
  * @param side target eye (only for top screen)
  */
-void sf2d_start_frame(gfxScreen_t screen, gfx3dSide_t side);
+void sf2d_set_render_screen(gfxScreen_t screen, gfx3dSide_t side);
 
 /**
  * @brief Starts a frame bound to a rendertarget
  * @param target rendertarget to draw to
  */
-void sf2d_start_frame_target(sf2d_rendertarget *target);
+void sf2d_set_render_target(sf2d_rendertarget *target);
 
 /**
- * @brief Ends a frame, should be called on pair with sf2d_start_frame
+ * @brief Ends rendering, should be called on pair with sf2d_start_render
  */
-void sf2d_end_frame();
-
-/**
- * @brief Swaps the framebuffers, should be called once after all the frames have been finished
- */
-void sf2d_swapbuffers();
-
-/**
- * @brief Enables or disables the VBlank waiting
- * @param enable whether to enable or disable the VBlank waiting
- */
-void sf2d_set_vblank_wait(int enable);
+void sf2d_end_render();
 
 /**
  * @brief Returns the FPS (frames per second)
@@ -515,7 +514,7 @@ void sf2d_draw_texture_rotate_scale_hotspot(const sf2d_texture *texture, int x, 
  * @param center_y the y position of the hotspot
  * @param color the color to blend with the texture
  */
-void sf2d_draw_texture_rotate_scale_hotspot_blend(const sf2d_texture *texture, int x, int y, float rad, float scale_x, float scale_y, float center_x, float center_y, u32 color); 
+void sf2d_draw_texture_rotate_scale_hotspot_blend(const sf2d_texture *texture, int x, int y, float rad, float scale_x, float scale_y, float center_x, float center_y, u32 color);
 
 /**
  * @brief Draws a part of a texture
