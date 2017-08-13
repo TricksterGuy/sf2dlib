@@ -4,12 +4,13 @@
 Simple and Fast 2D library for the Nintendo 3DS (using [citro3d] and [ctrulib])
 
 The main changes in this [sf2dlib] fork are as follows
-| Function                  | Change
-| --------------------------| ----------------------------------------------------------------------------------------- |
-| `sf2d_start_render()` | Newly added, use instead of `sf2d_start_frame`
-| `sf2d_start_frame(gfxScreen_t screen, gfx3dSide_t side)` | Removed, `sf2d_set_render_screen(gfxScreen_t screen, gfx3dSide_t side)` replaces it.
-| `sf2d_end_frame()` | Removed, `sf2d_end_render()` replaces it.
-| `sf2d_swapbuffers()` | Removed,ren `sf2d_end_render()` replaces it.
+| Function                         | Change                                                       |
+|----------------------------------|--------------------------------------------------------------|
+| `sf2d_start_render()`            | Newly added, use instead of `sf2d_start_frame`               |
+| `sf2d_start_frame(screen, side)` | Removed, `sf2d_set_render_screen(screen, side)` replaces it. |
+| `sf2d_end_frame()`               | Removed, `sf2d_end_render()` replaces it.                    |
+| `sf2d_swapbuffers()`             | Removed, `sf2d_end_render()` replaces it.                    |
+
 
 These changes are to make the code more consistent with [citro3d].
 
