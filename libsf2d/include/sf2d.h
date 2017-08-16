@@ -203,6 +203,12 @@ void sf2d_set_render_target(sf2d_rendertarget *target);
 void sf2d_end_render();
 
 /**
+ * @brief Set the FPS (frames per second)
+ * @param fps Frames per second (must be a positive value <= 60.0f)
+ */
+void sf2d_set_fps(float fps);
+
+/**
  * @brief Returns the FPS (frames per second)
  * @return the current FPS
  */

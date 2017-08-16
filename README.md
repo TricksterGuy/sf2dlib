@@ -8,10 +8,11 @@ The main changes in this [sf2dlib] fork are as follows
 
 | Function                         | Change                                                       |
 |----------------------------------|--------------------------------------------------------------|
-| `sf2d_start_render()`            | Newly added, use instead of `sf2d_start_frame`               |
+| `sf2d_start_render()`            | Newly added, use instead of `sf2d_start_frame`.              |
 | `sf2d_start_frame(screen, side)` | Removed, `sf2d_set_render_screen(screen, side)` replaces it. |
 | `sf2d_end_frame()`               | Removed, `sf2d_end_render()` replaces it.                    |
 | `sf2d_swapbuffers()`             | Removed, `sf2d_end_render()` replaces it.                    |
+| `sf2d_set_fps(fps)`              | Newly added.                                                 |
 
 
 These changes are to make the code more consistent with [citro3d].

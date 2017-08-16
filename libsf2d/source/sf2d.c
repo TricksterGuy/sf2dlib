@@ -170,6 +170,11 @@ void sf2d_end_render()
 	}
 }
 
+void sf2d_set_fps(float fps)
+{
+    C3D_FrameRate(fps);
+}
+
 float sf2d_get_fps()
 {
 	return current_fps;
