@@ -192,7 +192,7 @@ void sf2d_start_render();
 void sf2d_set_render_screen(gfxScreen_t screen, gfx3dSide_t side);
 
 /**
- * @brief Starts a frame bound to a rendertarget
+ * @brief Changes the render target
  * @param target rendertarget to draw to
  */
 void sf2d_set_render_target(sf2d_rendertarget *target);
@@ -713,19 +713,19 @@ void sf2d_texture_tile32(sf2d_texture *texture);
  * @param y the starting y coordinate of the scissor
  * @param w the width of the scissor rectangle
  * @param h the height of the scissor rectangle
- * @note This function should be called after sf2d_start_frame.
+ * @note This function should be called after sf2d_start_render.
  *       The scissor will remain active until the sf2d_end_frame call.
  */
 void sf2d_set_scissor_test(GPU_SCISSORMODE mode, u32 x, u32 y, u32 w, u32 h);
 
 /**
- * @brief Returns the current screen (latest call to sf2d_start_frame)
+ * @brief Returns the current screen (latest call to sf2d_start_render)
  * @note The returned value can be GFX_TOP or GFX_BOTTOM.
  */
 gfxScreen_t sf2d_get_current_screen();
 
 /**
- * @brief Returns the current screen side (latest call to sf2d_start_frame)
+ * @brief Returns the current screen side (latest call to sf2d_start_render)
  * @note The returned value can be GFX_LEFT or GFX_RIGHT.
  */
 gfx3dSide_t sf2d_get_current_side();
