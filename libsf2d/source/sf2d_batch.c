@@ -7,9 +7,15 @@ static sf2d_batch* current_batch = NULL;
 sf2d_batch* sf2d_create_batch(int size)
 {
     sf2d_batch* rt = calloc(1, sizeof(*rt));
-    // 2 triangles each with 3 vertices.
+    if (!rt) return NULL;
+    // Each texture drawn will be 2 triangles each with 3 vertices.
     rt->size = size * 6 * sizeof(sf2d_vertex_pos_tex);
     rt->vertices = linearAlloc(rt->size);
+    if (!rt->vertices)
+    {
+        free(rt);
+        return NULL;
+    }
     return rt;
 }
 
@@ -136,4 +142,10 @@ void sf2d_flush_batch()
 	C3D_DrawArrays(GPU_TRIANGLES, current_batch->start_index, current_batch->index - current_batch->start_index);
 
     current_batch->start_index = current_batch->index;
+}
+
+void sf2d_free_batch(sf2d_batch* batch)
+{
+    linearFree(batch->vertices);
+    free(batch);
 }

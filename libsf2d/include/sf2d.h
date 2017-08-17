@@ -726,6 +726,12 @@ void sf2d_end_batch();
 void sf2d_flush_batch();
 
 /**
+ * @brief Frees the batch.
+ * @param batch The batch to free.
+ */
+void sf2d_free_batch(sf2d_batch* batch);
+
+/**
  * @brief Changes a pixel of the texture
  * @param texture the texture to change the pixel
  * @param x the x coordinate to change the pixel

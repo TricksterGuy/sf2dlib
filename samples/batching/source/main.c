@@ -4,8 +4,9 @@
 #include <3ds.h>
 #include <sf2d.h>
 
-/// Exported via GIMP
-extern const struct {
+/// Exported via GIMP see ballsprites_img.c
+extern const struct
+{
   unsigned int 	 width;
   unsigned int 	 height;
   unsigned int 	 bytes_per_pixel;
@@ -14,7 +15,8 @@ extern const struct {
 
 #define MAX_SPRITES   1600
 
-typedef struct {
+typedef struct
+{
 	float x,y;			// screen co-ordinates
 	float dx, dy;		// velocity
 	int sx, sy;         // texture coordinates
@@ -79,7 +81,8 @@ int main()
 	printf("\x1b[9;1HPress Down to decrement sprites");
 
 	// Main loop
-	while (aptMainLoop()) {
+	while (aptMainLoop())
+    {
 
 		hidScanInput();
 
@@ -133,6 +136,10 @@ int main()
         sf2d_end_render();
 
 	}
+
+	// Free the batch when you are done.
+	sf2d_free_batch(sprite_batch);
+    sf2d_free_texture(tex1);
 
 	sf2d_fini();
 	return 0;
