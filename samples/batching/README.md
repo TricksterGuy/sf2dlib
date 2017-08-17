@@ -9,7 +9,17 @@ The code for this was adapted from a citro3d tutorial which was written by Winte
 ## Demo code
 The demo shows a bunch of balls being drawn at various locations, you can increase or decrease the number of balls using the up or down buttons.
 
-You can also switch between batched drawing and using the `sf2d_draw_texture_part` function to see the differences in performance. While running on citra I noticed the performance improvements ranged from a factor of 2x to 30x depending on how many sprites are being rendered. In non-batched drawing the fps quickly degraded as the number of balls increased as expected.
+You can also switch between batched drawing and using the `sf2d_draw_texture_part` function to see the differences in performance. 
+
+### Performance
+Performance was measured when compiled as a cia rendering 1600 sprites running on a small new nintendo 3ds.
+The things measured are the fps as reported by `sf2d_get_fps` (may not be accurate) and the CPU and GPU processing times via `C3D_GetProcessingTime` and `C3D_GetDrawingTime` respectively.
+
+
+| Environment      | FPS | CPU      | GPU  |
+|------------------|-----|----------|------|
+| Batching         | 30  | 15%      | 93%  |
+| Nonbatched       | 20  | 150-200% | 100% |
 
 
 ## Credits
