@@ -302,7 +302,7 @@ static inline void sf2d_draw_texture_rotate_scale_hotspot_generic(const sf2d_tex
 
 	const float w = texture->width;
 	const float h = texture->height;
-    
+
     vertices[0].position.x = -center_x * scale_x;
 	vertices[0].position.y = -center_y * scale_y;
 	vertices[0].position.z = SF2D_DEFAULT_DEPTH;
@@ -598,45 +598,6 @@ void sf2d_draw_texture_depth_blend(const sf2d_texture *texture, int x, int y, si
 {
 	sf2d_bind_texture_color(texture, GPU_TEXUNIT0, color);
 	sf2d_draw_texture_depth_generic(texture, x, y, z);
-}
-
-void sf2d_draw_quad_uv_current(float left, float top, float right, float bottom, float u0, float v0, float u1, float v1)
-{
-	sf2d_vertex_pos_tex *vertices = sf2d_pool_memalign(4 * sizeof(sf2d_vertex_pos_tex), 8);
-	if (!vertices) return;
-
-	vertices[0].position = (sf2d_vector_3f){left,  top,    SF2D_DEFAULT_DEPTH};
-	vertices[1].position = (sf2d_vector_3f){right, top,    SF2D_DEFAULT_DEPTH};
-	vertices[2].position = (sf2d_vector_3f){left,  bottom, SF2D_DEFAULT_DEPTH};
-	vertices[3].position = (sf2d_vector_3f){right, bottom, SF2D_DEFAULT_DEPTH};
-
-	vertices[0].texcoord = (sf2d_vector_2f){u0, v0};
-	vertices[1].texcoord = (sf2d_vector_2f){u1, v0};
-	vertices[2].texcoord = (sf2d_vector_2f){u0, v1};
-	vertices[3].texcoord = (sf2d_vector_2f){u1, v1};
-
-	C3D_AttrInfo* attrInfo = C3D_GetAttrInfo();
-	AttrInfo_Init(attrInfo);
-	AttrInfo_AddLoader(attrInfo, 0, GPU_FLOAT, 3);
-	AttrInfo_AddLoader(attrInfo, 1, GPU_FLOAT, 2);
-
-	C3D_BufInfo* bufInfo = C3D_GetBufInfo();
-	BufInfo_Init(bufInfo);
-	BufInfo_Add(bufInfo, vertices, sizeof(sf2d_vertex_pos_tex), 2, 0x10);
-
-	C3D_DrawArrays(GPU_TRIANGLE_STRIP, 0, 4);
-}
-
-void sf2d_draw_quad_uv(const sf2d_texture *texture, float left, float top, float right, float bottom, float u0, float v0, float u1, float v1)
-{
-	sf2d_bind_texture(texture, GPU_TEXUNIT0);
-	sf2d_draw_quad_uv_current(left, top, right, bottom, u0, v0, u1, v1);
-}
-
-void sf2d_draw_quad_uv_blend(const sf2d_texture *texture, float left, float top, float right, float bottom, float u0, float v0, float u1, float v1, u32 color)
-{
-	sf2d_bind_texture_color(texture, GPU_TEXUNIT0, color);
-	sf2d_draw_quad_uv_current(left, top, right, bottom, u0, v0, u1, v1);
 }
 
 // Grabbed from Citra Emulator (citra/src/video_core/utils.h)

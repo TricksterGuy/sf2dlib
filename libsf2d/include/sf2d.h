@@ -140,6 +140,15 @@ typedef struct {
 	C3D_Mtx projection;       /**< Orthographic projection matrix for this target */
 } sf2d_rendertarget;
 
+
+typedef struct {
+    sf2d_vertex_pos_tex* vertices;
+    int size;
+    int index;
+    int start_index;
+    sf2d_texture* bound;
+} sf2d_batch;
+
 // Basic functions
 
 /**
@@ -660,33 +669,61 @@ void sf2d_draw_texture_depth(const sf2d_texture *texture, int x, int y, signed s
 void sf2d_draw_texture_depth_blend(const sf2d_texture *texture, int x, int y, signed short z, u32 color);
 
 /**
- * @brief Draws the currently-bound texture using custom texture coordinates
- * @param left the left coordinate of the texture to start drawing
- * @param top the top coordinate of the texture to start drawing
- * @param width the width to draw from the starting left coordinate
- * @param height the height to draw from the starting top coordinate
- * @param u0 the U texture coordinate of the left vertices
- * @param v0 the V texture coordinate of the top vertices
- * @param u1 the U texture coordinate of the right vertices
- * @param v1 the V texture coordinate of the bottom vertices
+ * @brief Creates a new batch for textures, for efficient drawing.
+ * @param size The maximum number of texture to batch draw.
+ * @note See the batching demo to for usage of this and other associated functions..
  */
-void sf2d_draw_quad_uv_current(float left, float top, float right, float bottom, float u0, float v0,
-	float u1, float v1);
+sf2d_batch* sf2d_create_batch(int size);
 
 /**
- * @brief Like sf2d_draw_quad_uv_current, but binds the texture
- * @param texture the texture to draw
- **/
-void sf2d_draw_quad_uv(const sf2d_texture *texture, float left, float top, float right, float bottom,
-	float u0, float v0, float u1, float v1);
+ * @brief Resets a batch.
+ * @param batch Batch to reset.
+ * @note You shouldn't need to call this function directly it is done automatically by sf2d_start_batch.
+ */
+void sf2d_reset_batch(sf2d_batch* batch);
 
 /**
- * @brief Like sf2d_draw_quad_uv_current, but binds the texture with the given blend color
- * @param texture the texture to draw
- * @param color the color to blend the texture with
- **/
-void sf2d_draw_quad_uv_blend(const sf2d_texture *texture, float left, float top, float right, float bottom,
-	float u0, float v0, float u1, float v1, u32 color);
+ * @brief Start batch draw.
+ * All sf2d_batch_* calls will now refer to the pointer passed in.
+ * @param batch Batch to enable drawing on
+ */
+void sf2d_start_batch(sf2d_batch* batch);
+
+/**
+ * @brief Adds a texture to the batch.
+ * This function mirrors sf2d_draw_texture, for batch mode.
+ * @param texture the texture to draw.
+ * @param x the x coordinate to draw the texture to.
+ * @param y the y coordinate to draw the texture to.
+ * @note For efficient rendering, calls to this function with the same texture should be made.
+ */
+void sf2d_batch_texture(sf2d_texture* texture, int x, int y);
+
+/**
+ * @brief Adds a part of a texture to the batch.
+ * This function mirrors sf2d_draw_texture_part, for batch mode.
+ * @param texture the texture to draw.
+ * @param x the x coordinate to draw the texture to.
+ * @param y the y coordinate to draw the texture to.
+ * @param tex_x the starting point (x coordinate) where to start drawing.
+ * @param tex_y the starting point (y coordinate) where to start drawing.
+ * @param tex_w the width to draw from the starting point.
+ * @param tex_h the height to draw from the starting point.
+ * @note For efficient rendering, calls to this function with the same texture should be made.
+ */
+void sf2d_batch_texture_part(sf2d_texture* texture, int x, int y, int tex_x, int tex_y, int tex_w, int tex_h);
+
+/**
+ * @brief Ends batch drawing.
+ * The current batch is flushed and everything in the batch will be sent for rendering.
+ */
+void sf2d_end_batch();
+
+/**
+ * @brief Flushes the current batch.
+ * @note You shouldn't need to call this function directly, it is called automatically when the texture changes, or sf2d_end_batch was called.
+ */
+void sf2d_flush_batch();
 
 /**
  * @brief Changes a pixel of the texture
