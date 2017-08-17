@@ -1,12 +1,15 @@
 # Batching demo
+
 This demo demonstrates the usage of the new `sf2d_batch` related functions.
-Batching is a way to greatly increase performance if you are drawing the same texture in multiple places on screen.  (Think tilemaps)
-A good explanation of this technique can be read about at the following [link](https://gamedev.stackexchange.com/questions/32910/what-is-the-technical-definition-of-sprite-batching)
+Batching is a way to greatly increase performance if you are drawing the same texture in multiple places on screen.  (Think tilemaps). A good explanation of this technique can be read about at the following [link](https://gamedev.stackexchange.com/questions/32910/what-is-the-technical-definition-of-sprite-batching)
 
 The code for this was adapted from a citro3d tutorial which was written by WinterMute.
+
+
+## Demo code
 The demo shows a bunch of balls being drawn at various locations, you can increase or decrease the number of balls using the up or down buttons.
-You can also switch between batched drawing and using the `sf2d_draw_texture_part` function to see the differences in performance
-In the case of running on citra the performance improvements ranged from a factor of 2x to 30x depending on how many sprites are being rendered. In non-batched drawing the fps quickly degraded as the number of balls increased.
+
+You can also switch between batched drawing and using the `sf2d_draw_texture_part` function to see the differences in performance. While running on citra I noticed the performance improvements ranged from a factor of 2x to 30x depending on how many sprites are being rendered. In non-batched drawing the fps quickly degraded as the number of balls increased as expected.
 
 
 ## Credits
