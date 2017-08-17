@@ -106,7 +106,7 @@ int main()
 		printf("\x1b[1;1HMode:    %s\x1b[K", (batched_draw) ? "Batched" : "Nonbatched");
 		printf("\x1b[2;1HSprites: %zu/%u\x1b[K", numSprites, MAX_SPRITES);
 		/// TODO sf2d_get_fps seems to be wildly inaccurate, consider removing/improving citra-qt gives an accurate reading.
-		printf("\x1b[3;1HFPS:     %6.2f%%\x1b[K", sf2d_get_fps());
+		printf("\x1b[3;1HFPS:     %6.2f\x1b[K", sf2d_get_fps());
         printf("\x1b[4;1HCPU:     %6.2f%%\x1b[K", C3D_GetProcessingTime()*6.0f);
 		printf("\x1b[5;1HGPU:     %6.2f%%\x1b[K", C3D_GetDrawingTime()*6.0f);
 
