@@ -224,7 +224,7 @@ void sf2d_set_fps(float fps);
 float sf2d_get_fps();
 
 /**
- * @brief Allocates memory from a temporary pool. The pool will be emptied after a sf2d_swapbuffers call
+ * @brief Allocates memory from a temporary pool. The pool will be emptied after a sf2d_end_render call
  * @param size the number of bytes to allocate
  */
 void *sf2d_pool_malloc(u32 size);
